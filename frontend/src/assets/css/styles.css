@@ -216,6 +216,7 @@ footer {
     background-color: #777777;
 }
 
+
 @media (max-width: 600px) {
     #main-container {
         margin: 1rem auto;

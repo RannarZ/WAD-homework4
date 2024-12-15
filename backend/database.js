@@ -36,4 +36,19 @@ execute(createTblQuery).then(result => {
     }
 });
 
+const createUserTblQuery = `
+    CREATE TABLE IF NOT EXISTS "USERS" (
+        "ID" SERIAL PRIMARY KEY,
+        "EMAIL" VARCHAR(200) UNIQUE NOT NULL,
+        "PASSWORD" VARCHAR(200) NOT NULL
+    );`;
+
+// Execute the query to create USERS table
+execute(createUserTblQuery).then(result => {
+    if (result) {
+        console.log('If does not exist, create the "USERS" table');
+    }
+});
+
+
 module.exports = pool;

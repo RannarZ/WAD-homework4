@@ -3,6 +3,9 @@ const express = require('express');
 const pool = require('./database');
 const cors = require('cors')
 const port = process.env.PORT || 3000;
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const SECRET_KEY = "1234";
 
 const app = express();
 
@@ -72,6 +75,63 @@ app.delete('/api/posts/:id', async (req, res) => {
         res.json(deletepost);
     } catch (err) {
         console.error(err.message);
+    }
+});
+
+// Signup Endpoint
+app.post('/api/signup', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Hash the password before storing
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert user into the USERS table
+        const result = await pool.query(
+            "INSERT INTO \"USERS\"(\"EMAIL\", \"PASSWORD\") VALUES ($1, $2) RETURNING *", 
+            [email, hashedPassword]
+        );
+
+        const token = jwt.sign({ id: result.rows[0].ID, email }, SECRET_KEY, { expiresIn: "1h" });
+
+        res.status(201).json({ message: "User created successfully", token });
+    } catch (err) {
+        if (err.code === '23505') { // Unique constraint violation
+            res.status(400).json({ message: "Email already exists" });
+        } else {
+            console.error(err.message);
+            res.status(500).json({ message: "Server Error" });
+        }
+    }
+});
+
+// Login Endpoint
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Check if the user exists
+        const user = await pool.query(
+            "SELECT * FROM \"USERS\" WHERE \"EMAIL\" = $1", [email]
+        );
+
+        if (user.rows.length === 0) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // Verify password
+        const validPassword = await bcrypt.compare(password, user.rows[0].PASSWORD);
+        if (!validPassword) {
+            return res.status(400).json({ message: "Invalid credentials" });
+        }
+
+        // Generate JWT
+        const token = jwt.sign({ id: user.rows[0].ID, email }, SECRET_KEY, { expiresIn: "1h" });
+
+        res.json({ message: "Login successful", token });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server Error" });
     }
 });
 
