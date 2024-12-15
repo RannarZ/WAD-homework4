@@ -1,60 +1,66 @@
 <template>
-    <div>
-      <div class="posts-container">
+  <div>
+    <div class="posts-container">
       <div v-for="post in posts" :key="post.id" class="post">
         <div class="post-header">
-          <img src="../images/logo.jpg" alt="User Profile" class="profile-image" />
-          <span class="post-author">{{ post.author }}</span>
-          <span class="post-date">{{ formatDate(post.createTime) }}</span>
+          <span class="post-date">{{ formatDate(post.DATE) }}</span>
         </div>
-        <img v-if="post.image" :src="post.image" alt="Post Image" class="post-image" />
-        <p class="post-text">{{ post.content }}</p>
+        <p class="post-text">{{ post.BODY }}</p>
         <div class="post-footer">
-          <button class="like-button" @click="likePost(post.id)">
-            👍 Like 
-          </button>
-          {{ post.likes }}  
         </div>
       </div>
       <button @click="resetLikes" class="reset-button">Reset Likes</button>
+      <button @click="openAddPosts" class="reset-button">Add Post</button>
+      <button @click="deleteAllPosts" class="reset-button">Delete all</button>
     </div>
   </div>
 
-  </template>
-  
-  <script>
-  import { mapGetters, mapMutations, mapActions } from "vuex";
-  
-  export default {
-    name: "PostsComponent",
-    computed: {
-      ...mapGetters(["allPosts"]),
-      posts() {
-        return this.allPosts; // Get posts from Vuex
-      },
+</template>
+
+<script>
+
+export default {
+  name: "PostsComponent",
+  data() {
+    return {
+      posts: [],
+    };
+  },
+  mounted() {
+    this.fetchAllPosts()
+    console.log("mounted")
+  },
+  methods: {
+    formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
     },
-    methods: {
-        ...mapMutations(["incrementLikes"]),
-        ...mapActions(["resetAllLikes"]),
-        likePost(postId) {
-      this.incrementLikes(postId);
+    fetchAllPosts() {
+      fetch("http://localhost:3000/api/posts")
+        .then((response) => response.json())
+        .then((data) => (this.posts = data))
+        .catch((err) => console.log(err.message))
     },
-      resetLikes() {
-      this.resetAllLikes();
+    openAddPosts() {
+      this.$router.push('addpost')
     },
-      formatDate(dateString) {
-        const date = new Date(dateString);
-        return date.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-      },
+    deleteAllPosts() {
+      fetch("http://localhost:3000/api/posts", {
+        method: "DELETE"
+      }).then((response) => {
+        console.log(response.data);
+        location.reload();
+      }).catch((e) => {
+        console.log(e);
+        console.log("error");
+      });
     },
-  };
-  </script>
-  
-  <style>
-  
-  </style>
-  
+  },
+};
+</script>
+
+<style></style>

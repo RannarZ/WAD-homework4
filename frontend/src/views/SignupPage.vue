@@ -53,6 +53,7 @@ export default {
       this.validationErrors = this.validatePassword(this.password);
       if (this.validationErrors.length === 0) {
         console.log("User Signed Up", {
+          //TODO: Vaja andmebaasist kinnitus saada.
           email: this.email,
           password: this.password,
         });

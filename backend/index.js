@@ -18,7 +18,7 @@ app.post('/api/posts/', async (req, res) => {
         console.log("a post request has arrived");
         const post = req.body;
         const newpost = await pool.query(
-            "INSERT INTO \"POSTS\"(\"TITLE\", \"BODY\", \"URLLINK\") values ($1, $2, $3)    RETURNING*", [post.title, post.body, post.urllink]
+            "INSERT INTO \"POSTS\"(\"BODY\", \"DATE\") values ($1, $2)    RETURNING*", [post.BODY, post.DATE]
             // $1, $2, $3 are mapped to the first, second and third element of the passed array (post.title, post.body, post.urllink) 
             // The RETURNING keyword in PostgreSQL allows returning a value from the insert or update statement.
             // using "*" after the RETURNING keyword in PostgreSQL, will return everything
@@ -47,13 +47,31 @@ app.get('/api/posts/:id', async (req, res) => {
     }
 });
 
+//Get all posts from database
+app.get('/api/posts/', async (req, res) => {
+    try {
+        console.log("get all posts request has arrived");
+        // The req.params property is an object containing properties mapped to the named route "parameters". 
+        // For example, if you have the route /posts/:id, then the "id" property is available as req.params.id.
+        const posts = await pool.query( // pool.query runs a single query on the database.
+            //$1 is mapped to the first element of { id } (which is just the value of id). 
+            "SELECT * FROM \"POSTS\""
+        );
+        res.json(posts.rows); // we already know that the row array contains a single element, and here we are trying to access it
+        // The res.json() function sends a JSON response. 
+        // This method sends a response (with the correct content-type) that is the parameter converted to a JSON string using the JSON.stringify() method.
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
 app.put('/api/posts/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const post = req.body;
         console.log("update request has arrived");
         const updatepost = await pool.query(
-            "UPDATE \"POSTS\" SET (\"TITLE\", \"BODY\", \"URLLINK\") = ($2, $3, $4) WHERE id = $1", [id, post.title, post.body, post.urllink]
+            "UPDATE \"POSTS\" SET (\"BODY\",\"DATE\") = ($2, $3) WHERE id = $1", [id, post.body, post.date]
         );
         res.json(updatepost);
     } catch (err) {
@@ -70,6 +88,20 @@ app.delete('/api/posts/:id', async (req, res) => {
             "DELETE FROM \"POSTS\" WHERE \"ID\" = $1", [id]
         );
         res.json(deletepost);
+    } catch (err) {
+        console.error(err.message);
+    }
+});
+
+//Deleting all posts from database
+app.delete('/api/posts/', async (req, res) => {
+    try {
+        //const post = req.body; // we do not need a body for a delete request
+        console.log("delete all posts request has arrived");
+        const deleteAllpost = await pool.query(
+            "TRUNCATE \"POSTS\""
+        );
+        res.json(deleteAllpost);
     } catch (err) {
         console.error(err.message);
     }

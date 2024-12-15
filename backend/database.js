@@ -24,9 +24,8 @@ const execute = async (query) => {
 const createTblQuery = `
     CREATE TABLE IF NOT EXISTS "POSTS" (
 	    "ID" SERIAL PRIMARY KEY,         
-	    "TITLE" VARCHAR(200) NOT NULL,
 	    "BODY" VARCHAR(200) NOT NULL,
-        "URLLINK" VARCHAR(200)  
+        "DATE" DATE NOT NULL
     );`;
 
 // A function to execute the previous query   

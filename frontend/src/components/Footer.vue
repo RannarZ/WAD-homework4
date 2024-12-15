@@ -2,8 +2,7 @@
   <footer>
     <p>&copy; 2024 WAD app. All Rights Reserved.</p>
     <p>Made by Rannar, Philip, Oskar</p>
-    <p><router-link to="/contactus" >Contact us</router-link></p>
-    </footer>
+  </footer>
 </template>
 <script>
 export default {
@@ -11,5 +10,4 @@ export default {
 };
 
 </script>
-<style scoped>
-</style>
+<style scoped></style>
