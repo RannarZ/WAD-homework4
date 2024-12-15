@@ -5,17 +5,15 @@
 </template>
 
 <script>
-import PostsComponent from '../components/Posts.vue'; 
+import PostsComponent from '../components/Posts.vue';
 
 export default {
   name: 'MainPage',
   components: {
-    PostsComponent, 
+    PostsComponent,
   },
 };
 </script>
 
 
-<style>
-
-</style>
+<style></style>
