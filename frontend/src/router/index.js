@@ -13,9 +13,11 @@ const routes = [
   { path: '/', name: 'MainPage', component: MainPage },
   { path: '/signup', name: 'SignupPage', component: SignupPage },
   { path: '/login', name: 'Login', component: LoginPage },
-  { path: '/contactus', name: 'ContactsPage', component: ContactsPage }
+  { path: '/contactus', name: 'ContactsPage', component: ContactsPage },
   { path: '/addpost', name: 'AddPostPage', component: AddPostPage },
   { path: '/apost', name: 'APostPage', component: APostPage },
+  { path: '/apost/:id', name: 'APostPage', component: APostPage },
+
 ];
 
 const router = createRouter({

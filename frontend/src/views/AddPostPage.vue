@@ -33,8 +33,9 @@ export default {
     },
     addPost() {
       var data = {
-        body: this.post.body,
-        date: this.getCurrentDate() //TODO: seda vaja parandada veel
+        "BODY": this.post.body,
+        //date: this.getCurrentDate() //TODO: seda vaja parandada veel
+        "DATE": "2003-12-03"
       };
       // using Fetch - post method - send an HTTP post request to the specified URI with the defined body
       fetch("http://localhost:3000/api/posts", {

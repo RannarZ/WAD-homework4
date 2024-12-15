@@ -70,17 +70,25 @@ app.get('/api/posts/', async (req, res) => {
 
 app.put('/api/posts/:id', async (req, res) => {
     try {
-        const { id } = req.params;
-        const post = req.body;
-        console.log("update request has arrived");
+        const { id } = req.params; 
+        const { BODY, DATE } = req.body; 
+        console.log("Update request has arrived with ID:", id);
+        console.log("Request body:", req.body);
+
         const updatepost = await pool.query(
-            "UPDATE \"POSTS\" SET (\"BODY\",\"DATE\") = ($2, $3) WHERE id = $1", [id, post.body, post.date]
+            `UPDATE "POSTS" 
+             SET "BODY" = $2, "DATE" = $3 
+             WHERE "ID" = $1 RETURNING *`, 
+            [id, BODY, DATE]
         );
-        res.json(updatepost);
+
+        res.status(200).json({ message: "Post updated successfully", post: updatepost.rows[0] });
     } catch (err) {
-        console.error(err.message);
+        console.error("Error updating post:", err.message);
+        res.status(500).json({ error: "Server error" });
     }
 });
+
 
 app.delete('/api/posts/:id', async (req, res) => {
     try {
@@ -111,6 +119,8 @@ app.post('/api/signup', async (req, res) => {
         );
 
         const token = jwt.sign({ id: result.rows[0].ID, email }, SECRET_KEY, { expiresIn: "1h" });
+
+        console.log("user created")
 
         res.status(201).json({ message: "User created successfully", token });
     } catch (err) {
@@ -150,6 +160,9 @@ app.post('/api/login', async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: "Server Error" });
+    }
+});
+        
 
 //Deleting all posts from database
 app.delete('/api/posts/', async (req, res) => {

@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="button-container"> <button @click="logout" class="button">Logout</button>
+    </div>
+   
+    
     <PostsComponent />
   </div>
 </template>

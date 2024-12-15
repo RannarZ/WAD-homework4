@@ -202,7 +202,7 @@ footer {
     margin-top: auto;
 }
 
-.reset-button {
+.button {
     margin-bottom: 1rem;
     padding: 0.5rem 1rem;
     background-color: #555555;
@@ -213,10 +213,16 @@ footer {
     border-radius: 4px;
 }
 
-.reset-button:hover {
+.button:hover {
     background-color: #777777;
 }
 
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
 
 @media (max-width: 600px) {
     #main-container {
