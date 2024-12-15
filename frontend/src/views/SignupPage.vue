@@ -1,37 +1,31 @@
 <template>
-  <div id="main-container-signup">
-    <form id="signup-form" @submit.prevent="handleSignup">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" v-model="email" placeholder="Enter your email" required />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" v-model="password" placeholder="Enter your password"
-          required />
-      </div>
-      <div v-if="validationErrors.length" class="error-messages">
-        <p v-for="(error, index) in validationErrors" :key="index" class="error-text">
-          {{ error }}
-        </p>
-      </div>
-      <button type="submit" class="submit-button">Sign Up</button>
+  <div class="signup-page">
+    <h2>Signup</h2>
+    <form @submit.prevent="handleSignup">
+      <input v-model="email" type="email" placeholder="Email" required />
+      <input v-model="password" type="password" placeholder="Password" required />
+      <button type="submit">Signup</button>
     </form>
+    <p>Already have an account? <router-link to="/login">Login here</router-link></p>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: "SignupPage",
   data() {
     return {
       email: "",
       password: "",
-      validationErrors: [],
     };
   },
   methods: {
-    validatePassword(password) {
+
+   /*/ async handleSignup() {
+      try {
+        const response = await axios.post("http://localhost:3000/api/signup", {
+    /*/validatePassword(password) {
       const errors = [];
       const lengthValid = password.length >= 8 && password.length < 15;
       const startsWithUppercase = /^[A-Z]/.test(password);
@@ -54,25 +48,34 @@ export default {
       if (this.validationErrors.length === 0) {
         console.log("User Signed Up", {
           //TODO: Vaja andmebaasist kinnitus saada.
+
           email: this.email,
           password: this.password,
         });
-        alert(`Sign-up successful for ${this.email}`);
-        this.email = "";
-        this.password = "";
+        alert("Signup successful! Token: " + response.data.token);
+      } catch (error) {
+        console.error("Signup failed:", error.message);
+        alert("Signup failed: " + (error.response?.data?.message || error.message));
       }
     },
   },
 };
+
 </script>
 
-<style scoped>
-.error-messages {
-  color: red;
-  margin-top: 10px;
+<style>
+.signup-page {
+  text-align: center;
+  margin-top: 50px;
 }
-
-.error-text {
-  font-size: 0.9em;
+input {
+  display: block;
+  margin: 10px auto;
+  padding: 10px;
+  width: 200px;
+}
+button {
+  padding: 10px 20px;
+  cursor: pointer;
 }
 </style>
