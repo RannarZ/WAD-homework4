@@ -3,12 +3,12 @@
     <div id="form">
       <h3>A Post</h3>
       <label for="body">Body: </label>
-      <input name="body" type="text" id="body" required v-model="post.body" />
+      <input name="body" class="post-text" id="body" required v-model="post.body" />
     
     </div>
-    <div>
-      <button @click="updatePost" class="button">Update </button>
-      <button @click="deletePost" class="button">Delete </button>
+    <div class="button-container">
+      <button @click="updatePost(this.$route.params.id)" class="button">Update </button>
+      <button @click="deletePost(this.$route.params.id)" class="button">Delete </button>
     </div>
   </div>
 </template>
@@ -22,7 +22,6 @@ export default {
       post: {
         id: "",
         body: "",
-        urllink: "",
       },
     };
   },
@@ -35,14 +34,18 @@ export default {
         .then((data) => (this.post = data))
         .catch((err) => console.log(err.message));
     },
-    updatePost() {
+    updatePost(id) {
+      console.log(id)
       // using Fetch - put method - updates a specific post based on the passed id and the specified body
-      fetch(`http://localhost:3000/api/posts/${this.post.id}`, {
+      fetch(`http://localhost:3000/api/posts/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.post),
+        body: JSON.stringify({
+      BODY: this.post.body, 
+      DATE: "2003-12-03"
+    }),
       })
         .then((response) => {
           console.log(response.data);
@@ -54,16 +57,16 @@ export default {
           console.log(e);
         });
     },
-    deletePost() {
+    deletePost(id) {
       // using Fetch - delete method - delets a specific post based on the passed id
-      fetch(`http://localhost:3000/api/posts/${this.post.id}`, {
+      fetch(`http://localhost:3000/api/posts/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       })
         .then((response) => {
           console.log(response.data);
           // We are using the router instance of this element to navigate to a different URL location
-          //this.$router.push("/api/allposts");
+          //this.$router.push("/");
         })
         .catch((e) => {
           console.log(e);
@@ -84,7 +87,7 @@ export default {
 #form {
   max-width: 420px;
   margin: 30px auto;
-  background: rgb(167, 154, 154);
+  background: #555555;
   text-align: left;
   padding: 40px;
   border-radius: 10px;
@@ -92,11 +95,11 @@ export default {
 
 h3 {
   text-align: center;
-  color: rgb(8, 110, 110);
+  color: white;
 }
 
 label {
-  color: rgb(8, 110, 110);
+  color: white;
   display: inline-block;
   margin: 25px 0 15px;
   font-size: 0.8em;
@@ -112,15 +115,7 @@ input {
   box-sizing: border-box;
   border: none;
   border-bottom: 1px solid white;
-  color: blue;
+  color: white;
 }
 
-button {
-  background: rgb(8, 110, 110);
-  border: 0;
-  padding: 10px 20px;
-  margin-top: 20px;
-  color: white;
-  border-radius: 20px;
-}
 </style>

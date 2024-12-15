@@ -4,7 +4,7 @@
     <form @submit.prevent="handleSignup">
       <input v-model="email" type="email" placeholder="Email" required />
       <input v-model="password" type="password" placeholder="Password" required />
-      <button type="submit">Signup</button>
+      <button class="button">Signup</button>
     </form>
     <p>Already have an account? <router-link to="/login">Login here</router-link></p>
   </div>
@@ -58,6 +58,8 @@ export default {
         });
         console.log("User Signed Up",  response.data);
         alert("Signup successful! Token: " + response.data.token);
+        this.$router.push("/login");
+
         //TODO: Vaja andmebaasist kinnitus saada.
         
         } catch (error) {

@@ -4,7 +4,7 @@
       <form @submit.prevent="handleLogin">
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Password" required />
-        <button type="submit">Login</button>
+        <button class="button">Login</button>
       </form>
       <p>Don't have an account? <router-link to="/signup">Signup here</router-link></p>
     </div>
