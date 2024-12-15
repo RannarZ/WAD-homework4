@@ -26,6 +26,13 @@ export default {
     };
   },
   methods: {
+    getCurrentDate() {
+      const today = new Date()
+      const year = today.getFullYear();
+      const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so add 1
+      const day = String(today.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    },
     fetchAPost(id) {
       
       // fetch one post with the specied id (id)
@@ -44,14 +51,14 @@ export default {
         },
         body: JSON.stringify({
       BODY: this.post.body, 
-      DATE: "2003-12-03"
+      DATE: this.getCurrentDate() 
     }),
       })
         .then((response) => {
           console.log(response.data);
           //this.$router.push("/apost/" + this.post.id);
           // We are using the router instance of this element to navigate to a different URL location
-          this.$router.push("/");
+          this.$router.push('/');
         })
         .catch((e) => {
           console.log(e);
@@ -67,6 +74,8 @@ export default {
           console.log(response.data);
           // We are using the router instance of this element to navigate to a different URL location
           //this.$router.push("/");
+          this.$router.push('/');
+
         })
         .catch((e) => {
           console.log(e);

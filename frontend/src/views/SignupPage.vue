@@ -59,8 +59,6 @@ export default {
         console.log("User Signed Up",  response.data);
         alert("Signup successful! Token: " + response.data.token);
         this.$router.push("/login");
-
-        //TODO: Vaja andmebaasist kinnitus saada.
         
         } catch (error) {
         console.error("Signup failed:", error.message);
